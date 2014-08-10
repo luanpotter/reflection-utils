@@ -2,6 +2,7 @@ package xyz.luan.reflection;
 
 import java.lang.annotation.ElementType;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.function.Predicate;
 
 import javax.swing.JButton;
@@ -61,5 +62,12 @@ public class IsInnerClassTest {
     public void actuallyInnerClasses() {
         Assert.assertTrue(ReflectionUtils.isInnerClass(TopLevel.Inner.class));
         Assert.assertTrue(ReflectionUtils.isInnerClass(TopLevel.Static.Inner.class));
+    }
+
+    @Test
+    public void testAnonymous() {
+        Assert.assertTrue(ReflectionUtils.isInnerClass(new HashMap<String, String>(){
+            private static final long serialVersionUID = 8954422592898495388L;
+        }.getClass()));
     }
 }

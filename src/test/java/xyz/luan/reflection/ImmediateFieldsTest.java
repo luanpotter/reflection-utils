@@ -1,5 +1,6 @@
 package xyz.luan.reflection;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import org.junit.Assert;
@@ -51,6 +52,19 @@ public class ImmediateFieldsTest {
             private String a, b;
             {
                 put(a, b);
+            }
+        }.getClass()).size());
+    }
+
+    @Test
+    public void testJavaClasses() {
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(String.class).size());
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(ArrayList.class).size());
+        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursively(new ArrayList<Integer>(){
+            private static final long serialVersionUID = -938486839854925183L;
+            int a;
+            {
+                add(a);
             }
         }.getClass()).size());
     }
