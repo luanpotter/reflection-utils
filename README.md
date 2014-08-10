@@ -1,6 +1,8 @@
 Reflection Utils
 ===
 
+[![Build Status](https://api.shippable.com/projects/53e77cda9d47409e0059b9ff/badge/master)](https://www.shippable.com/projects/53e77cda9d47409e0059b9ff)
+
 Very simple one file library that allows you to get all the fields of a given class in a very simplistic ways, making sure to workaround all the caveats Java creates.
 
 Examples
