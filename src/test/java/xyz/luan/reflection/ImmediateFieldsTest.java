@@ -58,9 +58,9 @@ public class ImmediateFieldsTest {
 
     @Test
     public void testJavaClasses() {
-        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(String.class).size());
-        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(ArrayList.class).size());
-        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursively(new ArrayList<Integer>(){
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(String.class).size());
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(ArrayList.class).size());
+        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(new ArrayList<Integer>(){
             private static final long serialVersionUID = -938486839854925183L;
             int a;
             {

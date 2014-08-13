@@ -12,41 +12,41 @@ public class DeepFieldsTest {
 
     @Test
     public void testSimpleClass() {
-        Assert.assertEquals(3, ReflectionUtils.getFieldsRecursively(Car.class).size());
+        Assert.assertEquals(3, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(Car.class).size());
     }
 
     @Test
     public void testInheritanceClass() {
-        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursively(TopLevel.StaticChild.class).size());
+        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(TopLevel.StaticChild.class).size());
     }
 
     @Test
     public void testInnerClass() {
-        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursively(TopLevel.Inner.class).size());
+        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(TopLevel.Inner.class).size());
     }
 
     @Test
     public void testInnerInheritanceClass() {
-        Assert.assertEquals(2, ReflectionUtils.getFieldsRecursively(TopLevel.InnerChild.class).size());
+        Assert.assertEquals(2, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(TopLevel.InnerChild.class).size());
     }
 
     @Test
     public void testNestedStaticClass() {
-        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(TopLevel.Static.class).size());
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(TopLevel.Static.class).size());
     }
 
     @Test
     public void testNestedStaticInheritanceClass() {
-        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursively(TopLevel.StaticChild.class).size());
+        Assert.assertEquals(1, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(TopLevel.StaticChild.class).size());
     }
 
     @Test
     public void testAnonymous() {
-        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursively(new HashMap<String, String>(){
+        Assert.assertEquals(0, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(new HashMap<String, String>(){
             private static final long serialVersionUID = 8954422592898495388L;
         }.getClass()).size());
 
-        Assert.assertEquals(2, ReflectionUtils.getFieldsRecursively(new HashMap<String, String>(){
+        Assert.assertEquals(2, ReflectionUtils.getFieldsRecursivelyExceptJavaClasses(new HashMap<String, String>(){
             private static final long serialVersionUID = 8954422592898495388L;
             private String a, b;
             {
