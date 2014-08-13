@@ -130,11 +130,11 @@
       <name>Sonatype Nexus snapshot repository</name>
       <url>https://oss.sonatype.org/content/repositories/snapshots</url>
     </snapshotRepository>
-    <repositoryStaging>
+    <repository>
       <id>sonatype-nexus-staging</id>
       <name>Sonatype Nexus release repository</name>
       <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
-    </repositoryStaging>
+    </repository>
   </distributionManagement>
 
 </project>
