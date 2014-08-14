@@ -8,6 +8,7 @@
 
   <name>reflection-utils</name>
   <url>https://github.com/luanpotter/reflection-utils</url>
+  <description>Reflection Utils adds a few but essential missing methods in Java default Reflection API.</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
