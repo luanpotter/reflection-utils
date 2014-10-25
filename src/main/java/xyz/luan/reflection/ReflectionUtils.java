@@ -2,6 +2,7 @@ package xyz.luan.reflection;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -95,5 +96,35 @@ public final class ReflectionUtils {
      */
     public static boolean isJavaClass(Class<?> clazz) {
         return isBaseClass(clazz) || clazz.getPackage().getName().startsWith("java.") || clazz.getPackage().getName().startsWith("javax.");
+    }
+
+    private static final String TYPE_NAME_PREFIX = "class ";
+
+    private static String getClassName(Type type) {
+        if (type == null) {
+            return "";
+        }
+        String className = type.toString();
+        if (className.startsWith(TYPE_NAME_PREFIX)) {
+            className = className.substring(TYPE_NAME_PREFIX.length());
+        }
+        return className;
+    }
+
+    /**
+     * Returns the Class<?> object for this Type.
+     * @param type the type object
+     * @return a Class<?> object associated with the type parameter
+     */
+    public static Class<?> getClass(Type type) {
+        String className = getClassName(type);
+        if (className == null || className.isEmpty()) {
+            return null;
+        }
+        try {
+            return Class.forName(className);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
