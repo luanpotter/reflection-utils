@@ -112,9 +112,9 @@ public final class ReflectionUtils {
     }
 
     /**
-     * Returns the Class<?> object for this Type.
+     * Returns the Class&lt;?&gt; object for this Type.
      * @param type the type object
-     * @return a Class<?> object associated with the type parameter
+     * @return a Class&lt;?&gt; object associated with the type parameter
      */
     public static Class<?> getClass(Type type) {
         String className = getClassName(type);
