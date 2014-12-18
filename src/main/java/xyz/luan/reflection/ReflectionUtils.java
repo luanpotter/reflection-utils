@@ -47,7 +47,7 @@ public final class ReflectionUtils {
      * The method selects all non-static non-synthetic declared fields.
      * It will stop going up the hierarchy if it reaches a Java class (see {@link xyz.luan.reflection.ReflectionUtils#isJavaClass isJavaClass()}).
      * For example, the internal array inside String class will not be returned if you class extends String.
-     * @param clazz the class to be evaluated
+     * @param clazz  the class to be evaluated
      * @return a {@code List} with all the class's fields
      */
     public static List<Field> getFieldsRecursivelyExceptJavaClasses(Class<?> clazz) {
@@ -98,33 +98,12 @@ public final class ReflectionUtils {
         return isBaseClass(clazz) || clazz.getPackage().getName().startsWith("java.") || clazz.getPackage().getName().startsWith("javax.");
     }
 
-    private static final String TYPE_NAME_PREFIX = "class ";
-
-    private static String getClassName(Type type) {
-        if (type == null) {
-            return "";
-        }
-        String className = type.toString();
-        if (className.startsWith(TYPE_NAME_PREFIX)) {
-            className = className.substring(TYPE_NAME_PREFIX.length());
-        }
-        return className;
-    }
-
     /**
      * Returns the Class&lt;?&gt; object for this Type.
      * @param type the type object
      * @return a Class&lt;?&gt; object associated with the type parameter
      */
     public static Class<?> getClass(Type type) {
-        String className = getClassName(type);
-        if (className == null || className.isEmpty()) {
-            return null;
-        }
-        try {
-            return Class.forName(className);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
+        return TypeToClass.convert(type);
     }
 }
