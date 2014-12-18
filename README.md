@@ -1,7 +1,7 @@
 Reflection Utils
 ===
 
-[![Build Status](https://api.shippable.com/projects/53e77cda9d47409e0059b9ff/badge/master)](https://www.shippable.com/projects/53e77cda9d47409e0059b9ff)
+[![Build Status](https://travis-ci.org/luanpotter/reflection-utils.svg)](https://travis-ci.org/luanpotter/reflection-utils)
 
 Simple library that changes the base Reflection API on Java, making it easier to work with.
 It uses cowtowncoder/java-classmate for type parsing.
