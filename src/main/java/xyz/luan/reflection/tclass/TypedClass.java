@@ -7,8 +7,8 @@ import java.util.List;
 
 public class TypedClass<T> {
 
-    private Class<T> ref;
-    private List<Annotation> annotations;
+    protected Class<T> ref;
+    protected List<Annotation> annotations;
 
     TypedClass(Class<T> ref, Annotation[] annotations) {
         this.ref = ref;
