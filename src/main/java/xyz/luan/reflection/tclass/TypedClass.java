@@ -54,6 +54,10 @@ public class TypedClass<T> {
 		return this.annotations;
 	}
 
+	public static <T> TypedClass<T> create(Class<T> clazz) {
+		return (TypedClass<T>) Helper.create(clazz);
+	}
+
 	public static TypedClass<?> create(Field f) {
 		return Helper.create(f);
 	}
