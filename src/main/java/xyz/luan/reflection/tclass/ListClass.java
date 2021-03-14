@@ -1,6 +1,8 @@
 package xyz.luan.reflection.tclass;
 
+import com.fasterxml.classmate.ResolvedType;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.lang.reflect.Array;
 import java.util.Collection;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -11,8 +13,8 @@ public class ListClass<T> extends TypedClass<T> {
 
 	private TypedClass<?> component;
 
-	ListClass(Class<T> ref, Annotation[] annotations, TypedClass<?> component) {
-		super(ref, annotations);
+	ListClass(Class<T> ref, ResolvedType type, AnnotatedType annotatedType, Annotation[] annotations, TypedClass<?> component) {
+		super(ref, type, annotatedType, annotations);
 		this.component = component;
 	}
 

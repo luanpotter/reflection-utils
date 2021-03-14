@@ -1,6 +1,8 @@
 package xyz.luan.reflection.tclass;
 
+import com.fasterxml.classmate.ResolvedType;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.AnnotatedType;
 import java.util.Map;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -9,8 +11,8 @@ public class MapClass<T> extends TypedClass<T> {
 
 	private TypedClass<?> key, value;
 
-	MapClass(Class<T> ref, Annotation[] annotations, TypedClass<?> key, TypedClass<?> value) {
-		super(ref, annotations);
+	MapClass(Class<T> ref, ResolvedType type, AnnotatedType annotatedType, Annotation[] annotations, TypedClass<?> key, TypedClass<?> value) {
+		super(ref, type, annotatedType, annotations);
 		this.key = key;
 		this.value = value;
 	}

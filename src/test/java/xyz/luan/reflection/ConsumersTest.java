@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class ConsumersTest {
 
-	private class Holder {
+	private static class Holder {
 		private String s1, s2, s3;
 	}
 
