@@ -39,6 +39,7 @@ public class TypedClass<T> {
 
 	/**
 	 * Returns the raw Class this TypedClass points to.
+	 * @return the original Class
 	 */
 	public Class<T> asClass() {
 		return this.ref;
