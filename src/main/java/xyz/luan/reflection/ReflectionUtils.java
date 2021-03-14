@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 public final class ReflectionUtils {
 
 	private ReflectionUtils() {
-		throw new RuntimeException("Should not be instanciated");
+		throw new RuntimeException("Should not be instantiated");
 	}
 
 	/**
@@ -74,7 +74,7 @@ public final class ReflectionUtils {
 
 	/**
 	 * Applies a given consumer to every field returned by {@link xyz.luan.reflection.ReflectionUtils#getFieldsRecursively getFieldsRecursively()}.
-	 * Easy to use as it unchecks every excpetion thrown in the process.
+	 * Easy to use as it unchecks every exception thrown in the process.
 	 * 
 	 * @param clazz
 	 *            The class to be evaluated

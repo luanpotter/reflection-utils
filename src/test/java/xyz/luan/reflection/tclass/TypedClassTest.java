@@ -7,9 +7,12 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
+import xyz.luan.reflection.entities.ABCHolder;
 import xyz.luan.reflection.entities.Car;
 import xyz.luan.reflection.entities.ComplexModel;
 import xyz.luan.reflection.entities.ComplexModel.MyAnnotation;
+import xyz.luan.reflection.entities.CustomParametrizedType;
+import xyz.luan.reflection.entities.Id;
 
 public class TypedClassTest {
 
@@ -22,7 +25,7 @@ public class TypedClassTest {
     }
 
     @Test
-    public void testIntemediateField() throws NoSuchFieldException, SecurityException {
+    public void testIntermediateField() throws NoSuchFieldException, SecurityException {
         TypedClass<?> arrayOfListOfStrings = TypedClass.create(ComplexModel.class.getDeclaredField("arrayOfListOfString"));
 
         assertList(arrayOfListOfStrings);
@@ -47,6 +50,52 @@ public class TypedClassTest {
     public void testComplexFieldWithSubtypes() throws NoSuchFieldException, SecurityException {
         TypedClass<?> arrayOfListOfMapOf_ArrayOfString_to_ArrayOfInt_withSubtypes = TypedClass.create(ComplexModel.class.getDeclaredField("arrayOfListOfMapOf_ArrayOfString_to_ArrayOfInt_withSubtypes"));
         _testComplexField(arrayOfListOfMapOf_ArrayOfString_to_ArrayOfInt_withSubtypes);
+    }
+
+    @Test
+    public void testIsSubTypeOf() throws NoSuchFieldException {
+        class A {}
+        class B extends A {}
+        class C extends B {}
+        class Holder {
+            A a;
+            B b;
+            C c;
+        }
+
+        TypedClass<?> fieldA = TypedClass.create(Holder.class.getDeclaredField("a"));
+        Assert.assertTrue(fieldA.isSubtypeOf(A.class));
+        Assert.assertFalse(fieldA.isSubtypeOf(B.class));
+        Assert.assertFalse(fieldA.isSubtypeOf(C.class));
+
+        TypedClass<?> fieldB = TypedClass.create(Holder.class.getDeclaredField("b"));
+        Assert.assertTrue(fieldB.isSubtypeOf(A.class));
+        Assert.assertTrue(fieldB.isSubtypeOf(B.class));
+        Assert.assertFalse(fieldB.isSubtypeOf(C.class));
+
+        TypedClass<?> fieldC = TypedClass.create(Holder.class.getDeclaredField("c"));
+        Assert.assertTrue(fieldC.isSubtypeOf(A.class));
+        Assert.assertTrue(fieldC.isSubtypeOf(B.class));
+        Assert.assertTrue(fieldC.isSubtypeOf(C.class));
+    }
+
+    @Test
+    public void testCustomParametrizedType() throws NoSuchFieldException {
+        TypedClass<?> field = TypedClass.create(CustomParametrizedType.class.getDeclaredField("id"));
+        TypedClass<?> result = field.getGenericParameters(Id.class, 1).get(0);
+        Assert.assertEquals(result.asClass(), String.class);
+    }
+
+    @Test
+    public void testCustomMultiParametrizedType() throws NoSuchFieldException {
+        TypedClass<?> field = TypedClass.create(CustomParametrizedType.class.getDeclaredField("multiParam"));
+        List<TypedClass<?>> results = field.getGenericParameters(CustomParametrizedType.MultiParam.class, 3);
+        Assert.assertEquals(results.get(0).asClass(), String.class);
+        Assert.assertEquals(results.get(1).asClass(), Integer.class);
+
+        TypedClass<?> car = results.get(2).getGenericParameters(Id.class, 1).get(0);
+        Assert.assertEquals(car.asClass(), Car.class);
+        Assert.assertEquals(car.fields().size(), 3);
     }
 
     private void _testComplexField(TypedClass<?> arrayOfListOfMapOf_ArrayOfString_to_ArrayOfInt) {

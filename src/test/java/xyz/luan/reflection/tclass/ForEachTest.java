@@ -55,7 +55,7 @@ public class ForEachTest {
 	@Test
 	public void testMapForEach() {
 		final Map<Object, Object> results = new HashMap<>();
-		TypedClass.create(field("myMap")).asMap().forEach(myMap, (k, v) -> results.put(k, v));
+		TypedClass.create(field("myMap")).asMap().forEach(myMap, results::put);
 		Assert.assertEquals(myMap.toString(), results.toString());
 	}
 

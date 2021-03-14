@@ -8,6 +8,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,8 +42,7 @@ class Helper {
 	}
 
 	private static TypeResolver r() {
-		final TypeResolver typeResolver = new TypeResolver();
-		return typeResolver;
+		return new TypeResolver();
 	}
 
 	public static class EmptyAnnotationType implements AnnotatedArrayType, AnnotatedParameterizedType {
@@ -50,6 +50,10 @@ class Helper {
 		@Override
 		public Type getType() {
 			return null;
+		}
+
+		@Override public boolean isAnnotationPresent(Class<? extends Annotation> annotationClass) {
+			return false;
 		}
 
 		@Override
@@ -60,6 +64,18 @@ class Helper {
 		@Override
 		public Annotation[] getAnnotations() {
 			return new Annotation[0];
+		}
+
+		@Override public <T extends Annotation> T[] getAnnotationsByType(Class<T> annotationClass) {
+			return null;
+		}
+
+		@Override public <T extends Annotation> T getDeclaredAnnotation(Class<T> annotationClass) {
+			return null;
+		}
+
+		@Override public <T extends Annotation> T[] getDeclaredAnnotationsByType(Class<T> annotationClass) {
+			return null;
 		}
 
 		@Override
@@ -77,37 +93,51 @@ class Helper {
 			return new EmptyAnnotationType();
 		}
 
+		// for java 9+
+		public AnnotatedType getAnnotatedOwnerType() {
+			return null;
+		}
 	}
 
-	private static TypedClass<?> create(ResolvedType type, AnnotatedType at) {
+	static TypedClass<?> create(ResolvedType type, AnnotatedType at) {
 		if (at == null) {
-			return new TypedClass<>(type.getErasedType(), new Annotation[0]);
+			return new TypedClass<>(type.getErasedType(), type, null, new Annotation[0]);
 		}
 		Annotation[] annotations = at.getAnnotations();
 		if (type.isArray()) {
 			AnnotatedType childAnnotatedType = ((AnnotatedArrayType) at).getAnnotatedGenericComponentType();
 			ResolvedType childType = type.getArrayElementType();
-			return new ListClass<>(type.getErasedType(), annotations, create(childType, childAnnotatedType));
+			return new ListClass<>(type.getErasedType(), type, at, annotations, create(childType, childAnnotatedType));
 		} else if (type.isInstanceOf(Collection.class)) {
-			/*
-			 * TODO if more generic parameters are added, this wont work;
-			 * something like type.annotatedParametersFor must be used
-			 */
-			AnnotatedType childAnnotatedType = ((AnnotatedParameterizedType) at).getAnnotatedActualTypeArguments()[0];
-			List<ResolvedType> types = getParameters(type, Collection.class, 1);
-			ResolvedType childType = types.get(0);
-			return new ListClass<>(type.getErasedType(), annotations, create(childType, childAnnotatedType));
+			List<TypedClass<?>> results = getGenericParameters(at, type, List.class, 1);
+			return new ListClass<>(type.getErasedType(), type, at, annotations, results.get(0));
 		} else if (type.isInstanceOf(Map.class)) {
-			AnnotatedType[] att = ((AnnotatedParameterizedType) at).getAnnotatedActualTypeArguments();
-			List<ResolvedType> types = getParameters(type, Map.class, 2);
-			TypedClass<?> key = create(types.get(0), att[0]);
-			TypedClass<?> value = create(types.get(1), att[1]);
-			return new MapClass<>(type.getErasedType(), annotations, key, value);
+			List<TypedClass<?>> results = getGenericParameters(at, type, Map.class, 2);
+			return new MapClass<>(type.getErasedType(), type, at, annotations, results.get(0), results.get(1));
 		}
-		return new TypedClass<>(type.getErasedType(), annotations);
+		return new TypedClass<>(type.getErasedType(), type, at, annotations);
 	}
 
-	private static List<ResolvedType> getParameters(ResolvedType type, Class<?> target, int amount) {
+	static List<TypedClass<?>> getGenericParameters(AnnotatedType annotatedType, ResolvedType type, Class<?> targetClass, int amount) {
+		/*
+		 * TODO(luan) if more generic parameters are added, this wont work;
+		 * something like type.annotatedParametersFor must be used
+		 */
+		if (!(annotatedType instanceof AnnotatedParameterizedType)) {
+			return Collections.emptyList();
+		}
+
+		AnnotatedType[] actualArguments = ((AnnotatedParameterizedType) annotatedType).getAnnotatedActualTypeArguments();
+		List<ResolvedType> types = Helper.getParameters(type, targetClass, amount);
+
+		List<TypedClass<?>> results = new ArrayList<>(types.size());
+		for (int i = 0; i < amount; i++) {
+			results.add(Helper.create(types.get(i), actualArguments[i]));
+		}
+		return results;
+	}
+
+	static List<ResolvedType> getParameters(ResolvedType type, Class<?> target, int amount) {
 		List<ResolvedType> types = type.typeParametersFor(target);
 		if (types == null || types.isEmpty()) {
 			return fillObjects(amount);
@@ -115,11 +145,7 @@ class Helper {
 		return types;
 	}
 
-	private static List<ResolvedType> fillObjects(int amount) {
-		List<ResolvedType> types = new ArrayList<>();
-		for (int i = 0; i < amount; i++) {
-			types.add(r().resolve(Object.class));
-		}
-		return types;
+	static List<ResolvedType> fillObjects(int amount) {
+		return Collections.nCopies(amount, r().resolve(Object.class));
 	}
 }
