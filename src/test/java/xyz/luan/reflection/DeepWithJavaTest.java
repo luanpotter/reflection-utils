@@ -58,7 +58,6 @@ public class DeepWithJavaTest {
 
     @Test
     public void testJavaClasses() {
-        Assert.assertEquals(4, ReflectionUtils.getFieldsRecursively(String.class).size());
         Assert.assertEquals(3, ReflectionUtils.getFieldsRecursively(ArrayList.class).size());
         Assert.assertEquals(4, ReflectionUtils.getFieldsRecursively(new ArrayList<Integer>() {
             private static final long serialVersionUID = -938486839854925183L;
